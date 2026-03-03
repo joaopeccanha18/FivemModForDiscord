@@ -20,7 +20,8 @@
 |---|---|
 | `!config ver` | Exibe toda a configuração atual |
 | `!config setip [IP:PORTA]` | Define o IP do servidor FiveM |
-| `!config setstaff [@cargo]` | Define o cargo de Staff |
+| `!config setstaff [@cargo]` | Define o cargo de Staff Geral |
+| `!config setticketrole [@cargo]` | Define o cargo de Atendimento para Tickets |
 | `!config whitelist [#canal]` | Define o canal de Auto-Whitelist |
 | `!config entrada [#canal]` | Define o canal de boas-vindas |
 | `!config saida [#canal]` | Define o canal de saída |
@@ -29,12 +30,15 @@
 | `!config combate [#canal]` | Define o canal de logs de combate |
 | `!config admin [#canal]` | Define o canal de logs de admin |
 | `!config bau [#canal]` | Define o canal de logs de baús |
-| `!config-prefixo [símbolo]` | Muda o prefixo do bot (ex: `.`, `?`) |
-| `!config-statusbot auto` | Status mostra players do FiveM |
-| `!config-statusbot manual [TIPO] [texto]` | Status manual (PLAYING/WATCHING/LISTENING/COMPETING) |
-| `!config-nomebot [nome]` | Muda apelido do bot no servidor |
-| `!config-avatarbot [url]` | Muda o avatar global do bot |
-| `!config-autorole [@cargo]` | Cargo dado automaticamente a novos membros |
+| `!config ticket [#canal]` | Define o canal de logs de tickets |
+| `!config categoria [ID]` | Define a categoria onde os tickets serão criados |
+| `!config status [#canal]` | Define o canal com embed de status fixo da cidade |
+| `!config prefixo [símbolo]` | Muda o prefixo do bot (ex: `.`, `?`) |
+| `!config statusbot auto` | Status mostra players do FiveM |
+| `!config statusbot manual [TIPO] [texto]` | Status manual (PLAYING/WATCHING/LISTENING/COMPETING) |
+| `!config nomebot [nome]` | Muda apelido do bot no servidor |
+| `!config avatarbot [url]` | Muda o avatar global do bot |
+| `!config autorole [@cargo]` | Cargo dado automaticamente a novos membros |
 
 ---
 

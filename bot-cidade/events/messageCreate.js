@@ -21,7 +21,7 @@ module.exports = {
                 const id = conteudo;
                 await message.delete().catch(() => { });
                 try {
-                    const [res] = await client.db.execute('UPDATE vrp_users SET whitelisted = 1 WHERE id = ?', [id]);
+                    const [res] = await client.db.execute('UPDATE vrp_users SET whitelist = 1 WHERE id = ?', [id]);
                     const texto = res.affectedRows > 0
                         ? `✅ **Whitelist Aprovada!** Passaporte \`${id}\` liberado. Bem-vindo(a), ${message.author}!`
                         : `❌ Passaporte \`${id}\` não encontrado no banco de dados.`;

@@ -1,13 +1,13 @@
 {
   "_comentario": "Gerencie tudo via comandos !config no Discord. Não edite manualmente.",
   "prefix": "!",
-  "fivem_ip": "",
+  "fivem_ip": "45.149.153.148:30120",
   "status_mode": "auto",
   "status_texto": "",
   "status_tipo": "PLAYING",
   "autorole": "",
   "canais": {
-    "whitelist": "",
+    "whitelist": "1463937236482523213",
     "logs_combate": "",
     "logs_admin": "",
     "logs_bau": "",
@@ -15,8 +15,13 @@
     "entrada": "",
     "saida": "",
     "estatisticas": "",
-    "tickets": ""
+    "tickets": "1463937237191491608",
+    "ticket_categoria": "1463937237191491607",
+    "canal_status": "",
+    "status_message_id": "1478388785359093902",
+    "status": "1464640548986949748"
   },
+  "cargo_ticket": "",
   "cargo_staff": "",
   "mensagem_entrada": "Bem-vindo(a) ao servidor, {user}! 🎉",
   "mensagem_saida": "{user} saiu do servidor. 👋"

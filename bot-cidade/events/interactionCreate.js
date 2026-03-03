@@ -27,21 +27,50 @@ module.exports = {
             }
 
             try {
-                const ticketCh = await guild.channels.create({
-                    name: `ticket-${user.username}`,
+                const { getConfig } = require('../utils/configManager');
+                const cfg = getConfig();
+                const categoriaId = cfg.canais?.ticket_categoria;
+
+                const ticketRoleId = cfg.cargo_ticket || null;
+
+                // Remove caracteres especiais do username para evitar erro do Discord
+                const safeName = user.username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'user';
+
+                const overwrites = [
+                    { id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] }, // everyone não vê
+                    {
+                        id: user.id, allow: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory
+                        ]
+                    }
+                ];
+
+                // Se huma tag de atendente foi configurada, dá permissão a ela
+                if (ticketRoleId) {
+                    overwrites.push({
+                        id: ticketRoleId,
+                        allow: [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory
+                        ]
+                    });
+                }
+
+                const channelData = {
+                    name: `ticket-${safeName}`,
                     type: ChannelType.GuildText,
                     topic: user.id,
-                    permissionOverwrites: [
-                        { id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-                        {
-                            id: user.id, allow: [
-                                PermissionsBitField.Flags.ViewChannel,
-                                PermissionsBitField.Flags.SendMessages,
-                                PermissionsBitField.Flags.ReadMessageHistory
-                            ]
-                        }
-                    ]
-                });
+                    permissionOverwrites: overwrites
+                };
+
+                if (categoriaId) {
+                    channelData.parent = categoriaId;
+                }
+
+                const ticketCh = await guild.channels.create(channelData);
 
                 await interaction.reply({ content: `✅ Ticket criado em ${ticketCh}!`, ephemeral: true });
 
@@ -72,6 +101,7 @@ module.exports = {
                 console.error('[TICKET] Erro ao criar:', err.message);
                 interaction.reply({ content: '❌ Não foi possível criar o ticket. Verifique permissões do bot.', ephemeral: true });
             }
+
         }
 
         // ─── FECHAR TICKET ───────────────────────────────────────────

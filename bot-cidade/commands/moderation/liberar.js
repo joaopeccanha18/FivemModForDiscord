@@ -17,7 +17,7 @@ module.exports = {
         if (!id || isNaN(id)) return message.reply('📝 Uso: `!liberar [ID]`');
 
         try {
-            const [res] = await client.db.execute('UPDATE vrp_users SET whitelisted = 1 WHERE id = ?', [id]);
+            const [res] = await client.db.execute('UPDATE vrp_users SET whitelist = 1 WHERE id = ?', [id]);
             if (res.affectedRows === 0) return message.reply(`❌ ID \`${id}\` não encontrado.`);
             const embed = new EmbedBuilder().setColor('#00FF7F').setTitle('✅ Passaporte Liberado')
                 .addFields({ name: 'ID', value: `\`${id}\``, inline: true }, { name: 'Por', value: `${message.author}`, inline: true })

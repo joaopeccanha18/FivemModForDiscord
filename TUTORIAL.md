@@ -46,10 +46,11 @@ Após ligar o bot, use os comandos abaixo no Discord:
 
 ### Configuração essencial
 ```
-!config setip 45.123.45.6:30120  → IP do FiveM
-!config setstaff @Staff           → Cargo que pode usar !ban, !kick etc.
-!config-autorole @Cidadão         → Cargo dado a novos membros
-!config ver                       → Confirma tudo
+!config setip 45.123.45.6:30120   → IP do FiveM
+!config setstaff @Staff            → Cargo que pode usar !ban, !kick, etc.
+!config setticketrole @Suporte     → Cargo que pode ver os tickets abertos
+!config autorole @Cidadão          → Cargo dado a novos membros
+!config ver                        → Confirma tudo
 ```
 
 ### Configurar canais
@@ -61,12 +62,13 @@ Após ligar o bot, use os comandos abaixo no Discord:
 !config combate #logs-combate      → Logs de mortes detalhadas
 !config admin #logs-admin          → Logs de admin (heal/god)
 !config bau #logs-baus             → Logs de baús
+!config categoria 1234567890       → Categoria onde os tickets são abertos
 ```
 
 ### Configurar status
 ```
-!config-statusbot auto                           → Players FiveM (padrão)
-!config-statusbot manual PLAYING Roleplay City   → Texto fixo
+!config statusbot auto                           → Players FiveM (padrão)
+!config statusbot manual PLAYING Roleplay City   → Texto fixo
 ```
 
 ---
