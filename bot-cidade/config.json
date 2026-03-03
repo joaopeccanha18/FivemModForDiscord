@@ -1,0 +1,23 @@
+{
+  "_comentario": "Gerencie tudo via comandos !config no Discord. Não edite manualmente.",
+  "prefix": "!",
+  "fivem_ip": "",
+  "status_mode": "auto",
+  "status_texto": "",
+  "status_tipo": "PLAYING",
+  "autorole": "",
+  "canais": {
+    "whitelist": "",
+    "logs_combate": "",
+    "logs_admin": "",
+    "logs_bau": "",
+    "sugestoes": "",
+    "entrada": "",
+    "saida": "",
+    "estatisticas": "",
+    "tickets": ""
+  },
+  "cargo_staff": "",
+  "mensagem_entrada": "Bem-vindo(a) ao servidor, {user}! 🎉",
+  "mensagem_saida": "{user} saiu do servidor. 👋"
+}
