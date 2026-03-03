@@ -1,7 +1,7 @@
-# 🏙️ WhitelistBot — Sistema de Integração FiveM + Discord
+# 🏙️ FivemModForDiscord — v7
 
 > **Desenvolvido por João Peçanha**
-> Um sistema de integração completo e modular entre um servidor FiveM de roleplay e o Discord — sem precisar editar código para configurar.
+> Sistema de integração completo entre um servidor FiveM de roleplay e o Discord — configurável 100% via comandos, sem editar código.
 
 ---
 
@@ -10,142 +10,123 @@
 ### 🤖 Auto-Whitelist
 - Monitora um canal dedicado do Discord para IDs de jogadores
 - Aprova automaticamente o ID na tabela `vrp_users` do banco de dados
-- **Altera o apelido do membro** para o formato `NomePersonagem | ID` automaticamente
-- Deleta a mensagem do usuário instantaneamente
-- Envia uma confirmação visual que se auto-apaga após 5 segundos
+- Altera o apelido do membro para o formato `NomePersonagem | ID`
+- Adiciona o cargo de cidadão automaticamente
+- Deleta a mensagem do usuário e exibe confirmação visual de 5s
 
-### ⚙️ Configuração Dinâmica (Sem Editar Código)
-- Todas as configurações ficam no `config.json` e são gerenciadas via comandos `!config` no Discord
-- Alterações entram em vigor **imediatamente** — sem reiniciar o bot
-- Configurações: IP do servidor FiveM, prefixo, IDs de canais, autorole, modo de status e muito mais
-
-### 🎭 Eventos Automáticos
-- **Status Automático** — Atualiza o status "Jogando" do bot a cada 60s com a contagem de players ao vivo
-- **Embed de Status Fixo** — Mantém uma embed atualizada num canal configurado com status do servidor
+### ⚙️ Configuração Dinâmica
+- Todas as configurações via comandos `!config` no Discord
+- Alterações em vigor **imediatamente** — sem reiniciar o bot
+- Configurações: IP do FiveM, canais, cargos, modo de status e mais
 
 ### 🎫 Sistema de Tickets
-- `!setup` cria um painel de suporte profissional com botões interativos
-- Membros clicam em **📩 Abrir Ticket** para receber um canal privado
-- Staff ou o próprio membro fecha com **🔒 Fechar Ticket** (contagem regressiva de 5s)
-- Verificação de tickets duplicados
-
-### 🛠️ Moderação FiveM (Staff)
-- `!liberar [ID]` — Aprovação manual de whitelist
-- `!wlsetup` — Reenvia a embed de instrução fixada no canal de whitelist
+- `!setup` cria painel de suporte com botão interativo
+- Membros clicam em **📩 Abrir Ticket** para canal privado
+- Staff ou membro fecha com **🔒 Fechar Ticket** (contagem de 5s)
+- Prevenção de tickets duplicados
 
 ### 🔧 Moderação Discord (Staff)
-- `!clear [N]` — Apaga até 100 mensagens em massa
-- `!lock` / `!unlock` — Tranca/destranca o canal para @everyone
-- `!slowmode [seg]` — Define o modo lento (0 desativa)
-- `!timeout [@user] [min]` — Silencia temporariamente um membro
-- `!untimeout [@user]` — Remove o silenciamento
-- `!dban [@user] [motivo]` — Bane um membro do Discord
-- `!dkick [@user] [motivo]` — Expulsa um membro do Discord
-- `!setnick [@user] [apelido]` — Altera o apelido de um membro
-
-### 📝 Canais de Logs por Funcionalidade
-- Configure um canal separado para cada tipo de evento com `!config logs*`
-- **Logs de WL** (`!config logswl`) — Whitelists aprovadas
-- **Logs de Tickets** (`!config logsticket`) — Abertura e fechamento
-- **Logs de Combate** (`!config logscombate`) — Mortes do FiveM via webhook
+- `!clear` `!lock` `!unlock` `!slowmode`
+- `!timeout` `!untimeout` `!dban` `!dkick` `!setnick`
 
 ### 📣 Ferramentas de Staff
-- `!anunciar [#canal] [mensagem]` — Envia uma embed de anúncio com @everyone
-- `!embed [título] | [descrição]` — Cria uma embed personalizada
-- `!say [mensagem]` — Fala pelo bot
-- `!addemoji [nome] [url]` — Adiciona emoji ao servidor a partir de uma URL
+- `!anunciar` `!embed` `!say` `!addemoji`
+- `!liberar [ID]` — Whitelist manual
+- `!wlsetup` — Reenviar embed de instrução no canal de WL
 
-### 📊 Utilitários e Informações (Público)
-- `!ajuda` — Lista completa de comandos por categoria
-- `!ip` — Mostra o IP do servidor FiveM e a contagem de players ao vivo
-- `!serverinfo` — Estatísticas completas do servidor
-- `!userinfo [@user]` — Info de um membro
+### 📊 Status ao Vivo
+- Status do bot atualizado a cada 60s com players do FiveM
+- Embed de status fixo num canal configurado
 
-### 📨 Logs do FiveM → Discord (resource `discord-logs`)
-Logs avançados enviados via webhook diretamente para canais do Discord:
-- ✅ Jogador conectou (nome, menção do Discord, licença)
-- ❌ Jogador desconectou (nome, motivo)
-- 💀 **Logs de combate avançados** — nome da arma, distância em metros, detecção de headshot
-- 💊 Log de Heal por admin
-- 🛡️ Log de God Mode por admin (ligado/desligado)
-- 🗃️ Log de interação com baú/porta-malas
+### 📨 Logs FiveM → Discord (resource `discord-logs`)
+Enviados automaticamente via webhook sem passar pelo bot:
+- ✅ Jogador conectou / ❌ Desconectou
+- 💀 Mortes em combate — arma, distância, headshot
+- 💀 Mortes por queda / NPC / ambiente
 
 ---
 
 ## 🗂️ Estrutura do Projeto
 
 ```
-WhitelistBot/
-├── bot-cidade/              ← Bot Discord em Node.js
-│   ├── index.js             ← Entrada principal (carregamento recursivo)
-│   ├── config.json          ← Configurações dinâmicas (gerenciadas via !config)
-│   ├── .env.example         ← Template de credenciais estáticas
+FivemModForDiscord/
+├── bot-cidade/              ← Bot Discord (Node.js)
+│   ├── index.js
+│   ├── config.json          ← Configurações dinâmicas (!config)
+│   ├── .env                 ← Credenciais (TOKEN, DB)
 │   ├── utils/
-│   │   └── configManager.js ← Leitura/escrita segura do config.json
+│   │   ├── configManager.js
+│   │   └── logger.js
 │   ├── events/
 │   │   ├── ready.js
 │   │   ├── messageCreate.js
-│   │   ├── interactionCreate.js
-│   │   ├── guildMemberAdd.js
-│   │   └── guildMemberRemove.js
+│   │   └── interactionCreate.js
 │   └── commands/
-│       ├── config/          ← !config, !config-prefixo, !config-statusbot...
-│       ├── moderation/      ← !ban, !kick, !warn, !clear, !dban, !timeout...
-│       └── discord/         ← !ajuda, !ip, !ping, !serverinfo, !sugerir...
-├── discord-logs/            ← Resource Lua para FiveM (v3)
+│       ├── config/          ← !config, !wlsetup
+│       ├── moderation/      ← !clear, !lock, !dban, !timeout...
+│       └── discord/         ← !ajuda, !ip, !serverinfo...
+├── discord-logs/            ← Resource Lua para FiveM
 │   ├── fxmanifest.lua
 │   ├── config.lua           ← URLs dos Webhooks
-│   └── server.lua           ← Listeners de eventos + endpoint HTTP /dvall
-├── ext-logs/                ← Resource Lua alternativo (v2)
-│   ├── fxmanifest.lua
-│   ├── config.lua
-│   └── server.lua
-├── lista de comandos.md     ← Referência completa de comandos
-└── TUTORIAL.md              ← Guia de configuração passo a passo
+│   └── server.lua           ← Eventos + endpoint HTTP /kick
+├── lista de comandos.md
+├── TUTORIAL.md
+├── PM2_TUTORIAL.md
+└── README.md
 ```
 
 ---
 
 ## 🚀 Início Rápido
 
-### 1. Configurar o Bot
+### 1. Configurar `.env`
+```env
+TOKEN=seu_token_do_bot
+DB_HOST=ip_do_banco
+DB_USER=usuario
+DB_PASS=senha
+DB_NAME=nome_do_banco
+```
+
+### 2. Iniciar o bot
 ```bash
 cd bot-cidade
-cp .env.example .env     # Preencha TOKEN e credenciais do BD
+npm install
 node index.js
 ```
 
-### 2. Configurar pelo Discord
+### 3. Configurar pelo Discord
 ```
 !config setip 45.123.45.6:30120
 !config setstaff @Staff
 !config whitelist #whitelist
-!config entrada #boas-vindas
-!config-autorole @Cidadão
+!wlsetup
 !config ver
 ```
 
-### 3. Resource FiveM
+### 4. Resource FiveM
 ```bash
-# Copie a pasta discord-logs/ para o diretório resources do seu FiveM
-# Preencha os links dos webhooks em discord-logs/config.lua
+# Copie discord-logs/ para resources/ no servidor FiveM
+# Preencha os webhooks em discord-logs/config.lua
 # Adicione ao server.cfg:
 ensure baseevents
 ensure discord-logs
 ```
 
+### 5. Produção (VPS)
+Consulte o **[PM2_TUTORIAL.md](./PM2_TUTORIAL.md)** para manter o bot 24/7 com reinício automático.
+
 ---
 
-## 🧰 Tecnologias Utilizadas
+## 🧰 Tecnologias
 
 | Componente | Tecnologia |
 |---|---|
 | Bot Discord | Node.js + Discord.js v14 |
-| Banco de Dados | MySQL 2 (connection pool) |
-| Configuração | `fs` + JSON (dinâmico, sem reiniciar) |
-| Requisições HTTP | Axios |
-| Resource FiveM | Lua (Cerulean) |
-| Logs via Webhook | `PerformHttpRequest` nativo |
+| Banco de Dados | MySQL 2 |
+| HTTP | Axios |
+| Resource FiveM | Lua |
+| Logs | Discord Webhooks |
 
 ---
 

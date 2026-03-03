@@ -8,7 +8,7 @@
 
 - VPS com Ubuntu/Debian (recomendado)
 - Acesso root via SSH
-- O projeto `WhitelistBot` disponível na VPS (via Git ou upload manual)
+- O projeto `FivemModForDiscord` disponível na VPS (via Git ou upload manual)
 
 ---
 
@@ -37,19 +37,19 @@ npm -v    # deve mostrar 10.x.x
 ### Opção A — Via Git (recomendado)
 ```bash
 cd /root
-git clone https://github.com/SEU_USUARIO/WhitelistBot.git
-cd WhitelistBot/bot-cidade
+git clone https://github.com/joaopeccanha18/FivemModForDiscord.git
+cd FivemModForDiscord/bot-cidade
 ```
 
 ### Opção B — Upload Manual (SFTP/FileZilla)
-- Faça upload da pasta `bot-cidade` para `/root/WhitelistBot/bot-cidade`
+- Faça upload da pasta `bot-cidade` para `/root/FivemModForDiscord/bot-cidade`
 
 ---
 
 ## 🔑 PARTE 3 — Configurar o `.env`
 
 ```bash
-cd /root/WhitelistBot/bot-cidade
+cd /root/FivemModForDiscord/bot-cidade
 cp .env.example .env
 nano .env
 ```
@@ -72,7 +72,7 @@ Salve com `Ctrl+O`, `Enter`, depois `Ctrl+X`.
 ## 📦 PARTE 4 — Instalar as Dependências
 
 ```bash
-cd /root/WhitelistBot/bot-cidade
+cd /root/FivemModForDiscord/bot-cidade
 npm install
 ```
 
@@ -95,8 +95,8 @@ npm install -g pm2
 
 ### Iniciar o bot com PM2
 ```bash
-cd /root/WhitelistBot/bot-cidade
-pm2 start index.js --name "whitelistbot"
+cd /root/FivemModForDiscord/bot-cidade
+pm2 start index.js --name "fivemmoddiscord"
 ```
 
 ### Salvar o processo
@@ -135,7 +135,7 @@ Deve aparecer algo assim:
 ┌─────┬──────────────┬─────────┬──────┬───────────┬──────────┐
 │ id  │ name         │ status  │ cpu  │ mem       │ uptime   │
 ├─────┼──────────────┼─────────┼──────┼───────────┼──────────┤
-│  0  │ whitelistbot │ online  │ 0%   │ 80mb      │ 2m       │
+│  0  │ fivemmoddiscord │ online  │ 0%   │ 80mb      │ 2m       │
 └─────┴──────────────┴─────────┴──────┴───────────┴──────────┘
 ```
 
@@ -146,11 +146,11 @@ Deve aparecer algo assim:
 | Comando | O que faz |
 |---|---|
 | `pm2 list` | Lista os processos |
-| `pm2 logs whitelistbot` | Ver os logs em tempo real |
-| `pm2 logs whitelistbot --lines 200` | Ver os últimos 200 logs |
-| `pm2 restart whitelistbot` | Reiniciar o bot |
-| `pm2 stop whitelistbot` | Parar o bot |
-| `pm2 delete whitelistbot` | Remover do PM2 |
+| `pm2 logs fivemmoddiscord` | Ver os logs em tempo real |
+| `pm2 logs fivemmoddiscord --lines 200` | Ver os últimos 200 logs |
+| `pm2 restart fivemmoddiscord` | Reiniciar o bot |
+| `pm2 stop fivemmoddiscord` | Parar o bot |
+| `pm2 delete fivemmoddiscord` | Remover do PM2 |
 | `pm2 monit` | Painel visual com CPU/RAM |
 
 ---
@@ -159,11 +159,11 @@ Deve aparecer algo assim:
 
 Quando fizer alterações no código:
 ```bash
-cd /root/WhitelistBot/bot-cidade
+cd /root/FivemModForDiscord/bot-cidade
 # (se usando Git)
 git pull
 
-pm2 restart whitelistbot
+pm2 restart fivemmoddiscord
 ```
 
 ---
@@ -172,7 +172,7 @@ pm2 restart whitelistbot
 
 | Problema | Solução |
 |---|---|
-| Bot não inicia | Rode `pm2 logs whitelistbot` e veja o erro |
+| Bot não inicia | Rode `pm2 logs fivemmoddiscord` e veja o erro |
 | Bot não volta após reboot | Rode `pm2 startup` + `pm2 save` novamente |
 | `Cannot find module` | Rode `npm install` dentro de `bot-cidade/` |
 | Token inválido | Verifique o `.env` — token não pode ter espaços |

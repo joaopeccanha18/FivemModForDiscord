@@ -79,8 +79,6 @@ resources/[local]/discord-logs/
 ```lua
 Config.Webhooks = {
     Combate   = "https://discord.com/api/webhooks/...",
-    AdminHeal = "https://discord.com/api/webhooks/...",
-    Baus      = "https://discord.com/api/webhooks/...",
     JoinLeave = "https://discord.com/api/webhooks/..."
 }
 ```
@@ -91,14 +89,7 @@ ensure baseevents
 ensure discord-logs
 ```
 
-### 4. Integrar com scripts de admin/baús
-```lua
-TriggerServerEvent('discord-logs:adminHeal', "NomeAdmin", sourceAlvo)
-TriggerServerEvent('discord-logs:adminGod', "NomeAdmin", true)
-TriggerServerEvent('discord-logs:bau', "Detalhe do que aconteceu")
-```
 
----
 
 ## ❓ FAQ
 

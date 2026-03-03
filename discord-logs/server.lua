@@ -3,7 +3,7 @@
 -- Captura eventos do FiveM e envia Embeds ricas para o Discord
 -- ============================================================
 
--- Função de proteção: não envia se o webkit ainda não foi configurado
+-- Função de proteção: não envia se o webhook ainda não foi configurado
 local function webhookValido(url)
     return url and url ~= "" and not url:find("COLOQUE")
 end
@@ -48,9 +48,9 @@ end
 
 -- ============================================================
 -- MAPA: passport (vrp_id) → netId do servidor
--- Usado pelos endpoints /kick e /ban para encontrar o jogador ativo
+-- Usado pelo endpoint /kick para encontrar o jogador ativo
 -- ============================================================
-local passportMap = {} -- { [vrp_id_string] = netId }
+local passportMap = {}
 
 -- Webhook de entrada
 AddEventHandler('playerJoining', function()
@@ -64,11 +64,10 @@ AddEventHandler('playerJoining', function()
     )
 end)
 
--- Registra passport ID → netId quando o personagem spawna (evento vRP padrão)
+-- Registra passport ID → netId quando o personagem spawna
 AddEventHandler('vrp:playerSpawned', function(user_id, src, first_spawn)
     if user_id and src then
         passportMap[tostring(user_id)] = src
-        print(("[discord-logs] 🗂️  Passaporte %s → netId %s registrado"):format(tostring(user_id), tostring(src)))
     end
 end)
 
@@ -78,7 +77,6 @@ AddEventHandler('playerDropped', function(motivo)
     local nome = GetPlayerName(src) or "Desconhecido"
     local ids  = getIds(src)
 
-    -- Remove do passportMap
     for pid, netId in pairs(passportMap) do
         if netId == src then passportMap[pid] = nil; break end
     end
@@ -138,59 +136,12 @@ AddEventHandler('baseevents:onPlayerDied', function(killerData, deathData)
 end)
 
 -- ============================================================
--- EVENTO CUSTOMIZADO: Log de Admin Heal
--- TriggerServerEvent('discord-logs:adminHeal', nomeAdmin, sourceAlvo)
--- ============================================================
-RegisterNetEvent('discord-logs:adminHeal', function(nomeAdmin, alvoId)
-    local src  = source
-    local ids  = getIds(src)
-    local alvo = GetPlayerName(alvoId) or ("ID " .. tostring(alvoId))
-    enviarWebhook(Config.Webhooks.AdminHeal,
-        "💊 Admin: Heal Utilizado",
-        ("**Admin:** %s (%s)\n**Curou:** %s"):format(nomeAdmin, ids.discord, alvo),
-        Config.Cores.Admin
-    )
-end)
-
--- ============================================================
--- EVENTO CUSTOMIZADO: Log de Admin God Mode
--- TriggerServerEvent('discord-logs:adminGod', nomeAdmin, true/false)
--- ============================================================
-RegisterNetEvent('discord-logs:adminGod', function(nomeAdmin, ativo)
-    local src    = source
-    local ids    = getIds(src)
-    local status = ativo and "✅ **Ativou** o God Mode" or "❌ **Desativou** o God Mode"
-    enviarWebhook(Config.Webhooks.AdminGod,
-        "🛡️ Admin: God Mode",
-        ("**Admin:** %s (%s)\n**Ação:** %s"):format(nomeAdmin, ids.discord, status),
-        Config.Cores.Admin
-    )
-end)
-
--- ============================================================
--- EVENTO CUSTOMIZADO: Log de Baú / Porta-malas
--- TriggerServerEvent('discord-logs:bau', "detalhe")
--- ============================================================
-RegisterNetEvent('discord-logs:bau', function(detalhes)
-    local src  = source
-    local nome = GetPlayerName(src) or "Desconhecido"
-    local ids  = getIds(src)
-    enviarWebhook(Config.Webhooks.Baus,
-        "🗃️ Atividade em Baú/Porta-malas",
-        ("**Jogador:** %s\n**Discord:** %s\n**Detalhe:** %s"):format(nome, ids.discord, tostring(detalhes)),
-        Config.Cores.Bau
-    )
-end)
-
--- ============================================================
--- ENDPOINTS HTTP — chamados pelo Bot Discord
---   POST /kick  { passport, reason }  → DropPlayer em tempo real
---   POST /ban   { passport, reason }  → DropPlayer se online
---   POST /dvall                        → Deletar veículos vazios
+-- ENDPOINT HTTP: POST /kick
+-- Chamado pelo Bot Discord via comando !kick
+-- Expulsa o jogador pelo passport ID (vrp_id)
 -- ============================================================
 SetHttpHandler(function(req, res)
 
-    -- ── /kick ──────────────────────────────────────────────────────
     if req.path == '/kick' and req.method == 'POST' then
         local body     = json.decode(req.body or '{}') or {}
         local passport = tostring(body.passport or '')
@@ -207,37 +158,6 @@ SetHttpHandler(function(req, res)
         print(('[discord-logs] 👟 /kick: Passaporte %s (netId %s) — %s'):format(passport, tostring(netId), reason))
         res.writeHead(200, { ['Content-Type'] = 'application/json' })
         res.send(json.encode({ success = true, passport = passport }))
-
-    -- ── /ban ───────────────────────────────────────────────────────
-    elseif req.path == '/ban' and req.method == 'POST' then
-        local body     = json.decode(req.body or '{}') or {}
-        local passport = tostring(body.passport or '')
-        local reason   = tostring(body.reason or 'Banido.')
-
-        local netId = passportMap[passport]
-        local online = netId ~= nil
-        if online then
-            DropPlayer(netId, '[BAN] ' .. reason)
-            print(('[discord-logs] 🔨 /ban: Passaporte %s (netId %s) expulso.'):format(passport, tostring(netId)))
-        else
-            print(('[discord-logs] 🔨 /ban: Passaporte %s offline — ban só no BD.'):format(passport))
-        end
-
-        res.writeHead(200, { ['Content-Type'] = 'application/json' })
-        res.send(json.encode({ success = true, online = online, passport = passport }))
-
-    -- ── /dvall ─────────────────────────────────────────────────────
-    elseif req.path == '/dvall' and req.method == 'POST' then
-        local deletados = 0
-        for _, veh in ipairs(GetAllVehicles()) do
-            if GetPedInVehicleSeat(veh, -1) == 0 then
-                DeleteEntity(veh)
-                deletados = deletados + 1
-            end
-        end
-        print(('[discord-logs] 🚗 /dvall: %d veículos deletados.'):format(deletados))
-        res.writeHead(200, { ['Content-Type'] = 'application/json' })
-        res.send(json.encode({ success = true, deletados = deletados }))
 
     else
         res.writeHead(404)

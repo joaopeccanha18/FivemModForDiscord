@@ -88,7 +88,5 @@
 |---|---|
 | ✅ Jogador Conectou | Nome, Discord, licença |
 | ❌ Jogador Desconectou | Nome, motivo, identificadores |
-| 💀 Registro de Morte | Morto, matador, arma, distância, headshot |
-| 💊 Admin: Heal | Admin que curou e jogador alvo |
-| 🛡️ Admin: God Mode | Admin que ativou/desativou |
-| 🗃️ Baú / Porta-malas | Jogador e detalhes da interação |
+| 💀 Morte em Combate | Morto, matador, arma, distância, headshot |
+| 💀 Morte Registrada | Morto, causa (queda/NPC/ambiente), motivo |
