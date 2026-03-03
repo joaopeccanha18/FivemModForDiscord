@@ -4,7 +4,32 @@
 
 ---
 
-## ⚠️ Pré-requisitos
+## ⚡ INSTALAÇÃO AUTOMÁTICA (VPS Linux)
+
+> O script `setup.sh` faz tudo: instala Node.js, dependências, PM2 e configura auto-start no boot.
+
+### Pré-requisito
+Preencha o `bot-cidade/.env` antes de rodar:
+```env
+TOKEN=seu_token_do_bot
+DB_HOST=ip_do_banco
+DB_USER=usuario
+DB_PASS=senha
+DB_NAME=nome_do_banco
+```
+
+### Executar
+```bash
+# Na raiz do projeto na sua VPS:
+chmod +x setup.sh
+bash setup.sh
+```
+
+O script detecta o que já está instalado, valida o `.env` e inicia o bot automaticamente via PM2.
+
+---
+
+
 
 - Node.js 16.11+
 - MySQL com o banco de dados do vRP

@@ -46,6 +46,20 @@ Enviados automaticamente via webhook sem passar pelo bot:
 
 ---
 
+## ⚡ Instalação Automática (VPS Linux)
+
+Com o `.env` já configurado, rode na raiz do projeto:
+
+```bash
+chmod +x setup.sh
+bash setup.sh
+```
+
+O script instala Node.js, dependências, PM2 e configura auto-start no reboot automaticamente.
+Consulte o **[PM2_TUTORIAL.md](./PM2_TUTORIAL.md)** para mais detalhes de uso do PM2.
+
+---
+
 ## 🗂️ Estrutura do Projeto
 
 ```
