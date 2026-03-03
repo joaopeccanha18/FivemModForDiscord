@@ -6,7 +6,7 @@
 
 | Função | Como funciona |
 |---|---|
-| **Auto-Whitelist** | No canal configurado, o jogador envia só o número do ID → bot aprova no BD, deleta e exibe confirmação de 5s |
+| **Auto-Whitelist** | Jogador envia só o ID → bot aprova no BD, muda o apelido para `Nome \| ID`, deleta a msg original e exibe confirmação de 5s |
 | **Status Automático** | A cada 60s atualiza o "Jogando" com players do FiveM (modo `auto`) |
 | **Autorole** | Cargo aplicado automaticamente a novos membros |
 | **Boas-vindas** | Embed enviada no canal de entrada quando alguém entra |
@@ -33,6 +33,11 @@
 | `!config ticket [#canal]` | Define o canal de logs de tickets |
 | `!config categoria [ID]` | Define a categoria onde os tickets serão criados |
 | `!config status [#canal]` | Define o canal com embed de status fixo da cidade |
+| `!config logs [#canal]` | ⭐ Canal de logs de moderação (ban/kick/unban) |
+| `!config logswl [#canal]` | Canal de logs de Whitelist aprovada |
+| `!config logsticket [#canal]` | Canal de logs de Tickets abertos/fechados |
+| `!config logsbau [#canal]` | Canal de logs de Baús (FiveM + bot) |
+| `!config logscombate [#canal]` | Canal de logs de Combate (mortes do FiveM) |
 | `!config prefixo [símbolo]` | Muda o prefixo do bot (ex: `.`, `?`) |
 | `!config statusbot auto` | Status mostra players do FiveM |
 | `!config statusbot manual [TIPO] [texto]` | Status manual (PLAYING/WATCHING/LISTENING/COMPETING) |
@@ -47,8 +52,9 @@
 | Comando | Descrição |
 |---|---|
 | `!liberar [ID]` | Whitelist manual de um passaporte |
-| `!ban [ID] [motivo]` | Registra banimento no banco de dados |
-| `!kick [ID] [motivo]` | Registra kick no banco de dados |
+| `!ban [ID] [motivo]` | Bane no BD + expulsa via RCON (`ban [ID]`) |
+| `!unban [ID]` | Remove o banimento da tabela `vrp_bans` |
+| `!kick [ID] [motivo]` | Registra kick no BD + desconecta via RCON (`clientkick [ID]`) |
 | `!warn [ID] [motivo]` | Registra advertência (conta o total) |
 | `!dvall` | Limpa todos os veículos vazios no FiveM |
 

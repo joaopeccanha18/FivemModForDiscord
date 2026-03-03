@@ -77,13 +77,14 @@ AddEventHandler('playerDropped', function(motivo)
 end)
 
 -- ============================================================
--- EVENTO: Log de Combate Detalhado (via baseevents)
--- Inclui arma, distância e se foi headshot.
--- Requer: ensure baseevents no server.cfg
+-- COMBATE: mortes PvP detalhadas (requer baseevents no server.cfg)
 -- ============================================================
+local morteRegistrada = {} -- cache anti-duplicata (netId → timestamp)
+
 AddEventHandler('baseevents:onPlayerKilled', function(killerData, deathData)
-    local morto    = GetPlayerName(source) or "Desconhecido"
-    local killer   = "Mundo/Queda/Ambiente"
+    local src      = source
+    local morto    = GetPlayerName(src) or "Desconhecido"
+    local killer   = "Mundo / Ambiente"
     local arma     = tostring(deathData.weaponName or "Desconhecida")
     local distancia = deathData.killerDistance and math.floor(deathData.killerDistance) or 0
     local headshot = deathData.headShot and "**SIM** 🎯" or "Não"
@@ -93,11 +94,38 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerData, deathData)
         killer = GetPlayerName(killerData.killerNetId) or ("Jogador #" .. tostring(killerData.killerNetId))
     end
 
+    -- Marca como registrado para evitar duplicata com o fallback abaixo
+    morteRegistrada[src] = os.time()
+
     local desc = ("**Morto:** %s\n**Matador:** %s\n**Arma:** `%s`\n**Distância:** `%d metros`\n**Headshot:** %s"):format(
         morto, killer, arma, distancia, headshot
     )
+    enviarWebhook(Config.Webhooks.Combate, "💀 Morte em Combate", desc, cor)
+end)
 
-    enviarWebhook(Config.Webhooks.Combate, "💀 Registro de Morte", desc, cor)
+-- ============================================================
+-- COMBATE: fallback para QUALQUER tipo de morte não coberta acima
+-- (quedas, afogamento, NPCs, explosões, /kill, etc.)
+-- ============================================================
+AddEventHandler('baseevents:onPlayerDied', function(killerData, deathData)
+    local src  = source
+    -- Se já foi registrada pelo handler acima há menos de 3 segundos, ignora
+    if morteRegistrada[src] and (os.time() - morteRegistrada[src]) < 3 then return end
+
+    local morto = GetPlayerName(src) or "Desconhecido"
+    local arma  = tostring(deathData.weaponName or "Desconhecida")
+    local causa = "Mundo / Ambiente"
+
+    if killerData and killerData.killerType == 1 then
+        causa = "Jogador: " .. (GetPlayerName(killerData.killerNetId) or "#" .. tostring(killerData.killerNetId))
+    elseif killerData and killerData.killerType == 2 then
+        causa = "NPC / Veículo"
+    end
+
+    morteRegistrada[src] = os.time()
+
+    local desc = ("**Morto:** %s\n**Causa:** %s\n**Arma/Motivo:** `%s`"):format(morto, causa, arma)
+    enviarWebhook(Config.Webhooks.Combate, "💀 Morte Registrada", desc, Config.Cores.Morte)
 end)
 
 -- ============================================================

@@ -55,14 +55,19 @@ Após ligar o bot, use os comandos abaixo no Discord:
 
 ### Configurar canais
 ```
-!config whitelist #whitelist       → Canal de Auto-Whitelist
-!config entrada #boas-vindas       → Mensagens de entrada
+!config whitelist #whitelist       → Canal de Auto-Whitelist (entrada de IDs)
+!config entrada #boas-vindas       → Mensagens de entrada de membros
 !config saida #saidas              → Mensagens de saída
 !config sugerir #sugestoes         → Canal de sugestões
-!config combate #logs-combate      → Logs de mortes detalhadas
-!config admin #logs-admin          → Logs de admin (heal/god)
-!config bau #logs-baus             → Logs de baús
+!config status #status-cidade      → Embed de status da cidade (atualiza a cada 60s)
 !config categoria 1234567890       → Categoria onde os tickets são abertos
+
+# ───── Canais de Logs por Funcionalidade ─────
+!config logs #logs-mod             → Moderação geral (ban / kick / unban)
+!config logswl #logs-wl            → Logs de Whitelist aprovada
+!config logsticket #logs-tickets   → Logs de Tickets abertos/fechados
+!config logsbau #logs-baus         → Logs de Baús (FiveM + bot)
+!config logscombate #logs-combate  → Logs de Combate do FiveM
 ```
 
 ### Configurar status

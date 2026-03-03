@@ -1,6 +1,6 @@
 /**
  * commands/discord/ajuda.js — !ajuda
- * Exibe todos os comandos organizados por categoria em um menu de embeds.
+ * Exibe todos os comandos organizados por categoria.
  */
 const { EmbedBuilder } = require('discord.js');
 const { getConfig } = require('../../utils/configManager');
@@ -14,30 +14,33 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#5865F2')
             .setTitle('📋 Lista de Comandos')
-            .setDescription(`Prefixo atual: \`${p}\``)
             .addFields(
                 {
-                    name: '⚙️ Configuração do Bot (Admin)',
+                    name: '⚙️ Configuração (Admin)',
                     value: [
                         `\`${p}config ver\` — Ver todas as configurações`,
-                        `\`${p}config setip\` — Definir IP do FiveM`,
-                        `\`${p}config setstaff\` — Definir cargo de Staff`,
-                        `\`${p}config [whitelist/entrada/saida/...]\` — Definir canais`,
-                        `\`${p}config-prefixo\` — Mudar prefixo`,
-                        `\`${p}config-statusbot\` — Configurar status do bot`,
-                        `\`${p}config-nomebot\` — Mudar nome do bot`,
-                        `\`${p}config-avatarbot\` — Mudar avatar do bot`,
-                        `\`${p}config-autorole\` — Definir cargo ao entrar`,
+                        `\`${p}config setip [IP:PORTA]\` — Definir IP do FiveM`,
+                        `\`${p}config setstaff [@cargo]\` — Cargo de Staff`,
+                        `\`${p}config setticketrole [@cargo]\` — Cargo de Atendimento`,
+                        `\`${p}config whitelist [#canal]\` — Canal de Auto-WL`,
+                        `\`${p}config status [#canal]\` — Canal de status fixo`,
+                        `\`${p}config logs [#canal]\` — Logs de moderação`,
+                        `\`${p}config logswl [#canal]\` — Logs de Whitelist`,
+                        `\`${p}config logsticket [#canal]\` — Logs de Tickets`,
+                        `\`${p}config logsbau [#canal]\` — Logs de Baús`,
+                        `\`${p}config logscombate [#canal]\` — Logs de Combate`,
+                        `\`${p}config ticket [#canal]\` — Canal de Tickets`,
+                        `\`${p}config categoria [ID]\` — Categoria de Tickets`,
                     ].join('\n')
                 },
                 {
                     name: '🛠️ Moderação FiveM (Staff)',
                     value: [
                         `\`${p}liberar [ID]\` — Aprovar whitelist manualmente`,
-                        `\`${p}ban [ID] [motivo]\` — Banir no BD da cidade`,
-                        `\`${p}kick [ID] [motivo]\` — Kick no BD da cidade`,
+                        `\`${p}ban [ID] [motivo]\` — Banir no BD + RCON`,
+                        `\`${p}unban [ID]\` — Remover banimento`,
+                        `\`${p}kick [ID] [motivo]\` — Kick no BD + RCON`,
                         `\`${p}warn [ID] [motivo]\` — Advertência no BD`,
-                        `\`${p}dvall\` — Limpar veículos vazios in-game`,
                     ].join('\n')
                 },
                 {
@@ -64,15 +67,11 @@ module.exports = {
                     ].join('\n')
                 },
                 {
-                    name: '📊 Informações & Utilitários',
+                    name: '📊 Informações',
                     value: [
-                        `\`${p}ip\` — Ver IP e players do servidor FiveM`,
-                        `\`${p}ping\` — Latência do bot`,
+                        `\`${p}ip\` — IP e jogadores do servidor FiveM`,
                         `\`${p}serverinfo\` — Informações do servidor`,
-                        `\`${p}servericon\` — Ícone do servidor`,
-                        `\`${p}serverbanner\` — Banner do servidor`,
                         `\`${p}userinfo [@user]\` — Info de um usuário`,
-                        `\`${p}sugerir [texto]\` — Enviar sugestão`,
                     ].join('\n')
                 }
             )

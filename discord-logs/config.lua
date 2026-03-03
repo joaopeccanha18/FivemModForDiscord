@@ -7,7 +7,7 @@ Config = {}
 
 -- Cole os links dos Webhooks criados no seu servidor Discord
 Config.Webhooks = {
-    Combate   = "COLOQUE_SEU_WEBHOOK_DE_COMBATE_AQUI",
+    Combate   = "https://discord.com/api/webhooks/1478413110350975017/2p0SOoJvRhOaIJlvDDV4siHaWql0D4u7KZhPyVCpr_TCHdff-1T1qRL7XgZLvHBWLrPO",
     AdminHeal = "COLOQUE_SEU_WEBHOOK_DE_ADMIN_AQUI",
     AdminGod  = "COLOQUE_SEU_WEBHOOK_DE_ADMIN_AQUI",
     Baus      = "COLOQUE_SEU_WEBHOOK_DE_BAUS_AQUI",

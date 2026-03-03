@@ -6,6 +6,7 @@ const {
     Events, PermissionsBitField, ChannelType,
     EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle
 } = require('discord.js');
+const { sendLog } = require('../utils/logger');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -97,6 +98,16 @@ module.exports = {
                     components: [new ActionRowBuilder().addComponents(closeBtn)]
                 });
 
+                // Log de ticket aberto
+                await sendLog(client, {
+                    type: 'TICKET',
+                    title: '🎫 Ticket Aberto',
+                    fields: [
+                        { name: '👤 Usuário', value: user.tag, inline: true },
+                        { name: '📢 Canal', value: `#${ticketCh.name}`, inline: true }
+                    ]
+                });
+
             } catch (err) {
                 console.error('[TICKET] Erro ao criar:', err.message);
                 interaction.reply({ content: '❌ Não foi possível criar o ticket. Verifique permissões do bot.', ephemeral: true });
@@ -114,6 +125,17 @@ module.exports = {
             }
 
             await interaction.reply('🔒 Ticket será fechado em **5 segundos**...');
+
+            // Log de ticket fechado
+            await sendLog(client, {
+                type: 'TICKET',
+                title: '🔒 Ticket Fechado',
+                fields: [
+                    { name: '👀 Fechado por', value: user.tag, inline: true },
+                    { name: '📢 Canal', value: channel.name, inline: true }
+                ]
+            });
+
             setTimeout(() => channel.delete().catch(console.error), 5_000);
         }
     }

@@ -10,6 +10,7 @@
 ### 🤖 Auto-Whitelist
 - Monitora um canal dedicado do Discord para IDs de jogadores
 - Aprova automaticamente o ID na tabela `vrp_users` do banco de dados
+- **Altera o apelido do membro** para o formato `NomePersonagem | ID` automaticamente
 - Deleta a mensagem do usuário instantaneamente
 - Envia uma confirmação visual que se auto-apaga após 5 segundos
 
@@ -32,8 +33,9 @@
 
 ### 🛠️ Moderação FiveM (Staff)
 - `!liberar [ID]` — Aprovação manual de whitelist
-- `!ban [ID] [motivo]` — Registra banimento no banco de dados
-- `!kick [ID] [motivo]` — Registra kick no banco de dados
+- `!ban [ID] [motivo]` — Registra ban no DB **+ expulsa via RCON** (`ban [ID]`)
+- `!unban [ID]` — Remove o banimento da tabela `vrp_bans`
+- `!kick [ID] [motivo]` — Registra kick no DB **+ desconecta via RCON** (`clientkick [ID]`)
 - `!warn [ID] [motivo]` — Registra advertência com contador acumulado
 - `!dvall` — Envia requisição HTTP ao servidor FiveM para deletar todos os veículos vazios
 
@@ -46,6 +48,12 @@
 - `!dban [@user] [motivo]` — Bane um membro do Discord
 - `!dkick [@user] [motivo]` — Expulsa um membro do Discord
 - `!setnick [@user] [apelido]` — Altera o apelido de um membro
+
+### 📝 Canal de Logs Centralizado
+- Todas as ações do bot são registradas em embeds coloridas num canal exclusivo
+- Configure com `!config logs #canal`
+- Eventos registrados: **Whitelist**, **Kick**, **Ban**, **Unban**, **Ticket aberto**, **Ticket fechado**
+- Cada embed mostra: tipo do evento, quem executou, ID do passaporte e resultado do RCON
 
 ### 📣 Ferramentas de Staff
 - `!anunciar [#canal] [mensagem]` — Envia uma embed de anúncio com @everyone
