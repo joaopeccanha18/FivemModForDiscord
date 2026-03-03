@@ -62,7 +62,6 @@ DB_USER=usuario_do_banco
 DB_PASS=senha_do_banco
 DB_NAME=nome_do_banco
 RCON_PORT=30120
-RCON_PASSWORD=senha_rcon
 ```
 
 Salve com `Ctrl+O`, `Enter`, depois `Ctrl+X`.
