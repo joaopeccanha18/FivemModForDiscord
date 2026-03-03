@@ -46,11 +46,58 @@ async function updateStatusEmbed(client, playerCount, online) {
     }
 }
 
+async function updateWlEmbed(client) {
+    const cfg = getConfig();
+    const canalId = cfg.canais?.whitelist;
+    if (!canalId) return;
+
+    const canal = client.channels.cache.get(canalId);
+    if (!canal) return;
+
+    const embed = new EmbedBuilder()
+        .setTitle('🔑  Whitelist — Passaporte')
+        .setColor('#5865F2')
+        .setDescription(
+            '## Como liberar seu passaporte\n\n' +
+            '> **1.** Abra o jogo e anote o número do seu **Passaporte** .\n' +
+            '> **2.** Cole **apenas o número** aqui neste canal.\n' +
+            '> **3.** Siga as regras do RolePlay, e boa viagem para a Fixture RolePlay.\n\n' +
+            '```\nExemplo: 1234\n```'
+        )
+        .setFooter({ text: '⚡ Aprovação automática' })
+        .setTimestamp();
+
+    try {
+        const msgId = cfg.canais?.wl_message_id;
+        if (msgId) {
+            try {
+                const msg = await canal.messages.fetch(msgId);
+                await msg.edit({ embeds: [embed] });
+                return;
+            } catch { /* mensagem foi deletada — cria nova */ }
+        }
+
+        // Apaga msgs antigas do bot no canal antes de enviar nova
+        const msgs = await canal.messages.fetch({ limit: 10 });
+        const botMsgs = msgs.filter(m => m.author.id === client.user.id);
+        for (const m of botMsgs.values()) await m.delete().catch(() => { });
+
+        const novaMsg = await canal.send({ embeds: [embed] });
+        saveConfig({ canais: { wl_message_id: novaMsg.id } });
+        console.log('[WL EMBED] ✅ Embed de instrução enviada no canal de WL.');
+    } catch (err) {
+        console.error('[WL EMBED] Erro:', err.message);
+    }
+}
+
 module.exports = {
     name: Events.ClientReady,
     once: true,
     execute(client) {
         console.log(`[BOT] ✅ Online como ${client.user.tag}`);
+
+        // Embed fixa de instrução no canal de WL
+        updateWlEmbed(client);
 
         const updateStatus = async () => {
             const cfg = getConfig();

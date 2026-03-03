@@ -6,11 +6,8 @@
 
 | Função | Como funciona |
 |---|---|
-| **Auto-Whitelist** | Jogador envia só o ID → bot aprova no BD, muda o apelido para `Nome \| ID`, deleta a msg original e exibe confirmação de 5s |
-| **Status Automático** | A cada 60s atualiza o "Jogando" com players do FiveM (modo `auto`) |
-| **Autorole** | Cargo aplicado automaticamente a novos membros |
-| **Boas-vindas** | Embed enviada no canal de entrada quando alguém entra |
-| **Saída** | Embed enviada no canal de saída quando alguém sai |
+| **Auto-Whitelist** | Jogador envia só o ID → bot aprova no BD, muda o apelido para `Nome \| ID`, adiciona cargo de WL, deleta a msg original e exibe confirmação de 5s |
+| **Status Automático** | A cada 60s atualiza o "Jogando" com players do FiveM |
 
 ---
 
@@ -23,27 +20,13 @@
 | `!config setstaff [@cargo]` | Define o cargo de Staff Geral |
 | `!config setticketrole [@cargo]` | Define o cargo de Atendimento para Tickets |
 | `!config whitelist [#canal]` | Define o canal de Auto-Whitelist |
-| `!config entrada [#canal]` | Define o canal de boas-vindas |
-| `!config saida [#canal]` | Define o canal de saída |
-| `!config sugerir [#canal]` | Define o canal de sugestões |
-| `!config estatistica [#canal]` | Define o canal de estatísticas |
-| `!config combate [#canal]` | Define o canal de logs de combate |
-| `!config admin [#canal]` | Define o canal de logs de admin |
-| `!config bau [#canal]` | Define o canal de logs de baús |
-| `!config ticket [#canal]` | Define o canal de logs de tickets |
+| `!config ticket [#canal]` | Define o canal de tickets |
 | `!config categoria [ID]` | Define a categoria onde os tickets serão criados |
 | `!config status [#canal]` | Define o canal com embed de status fixo da cidade |
-| `!config logs [#canal]` | ⭐ Canal de logs de moderação (ban/kick/unban) |
+| `!config logs [#canal]` | Canal de logs de moderação geral |
 | `!config logswl [#canal]` | Canal de logs de Whitelist aprovada |
 | `!config logsticket [#canal]` | Canal de logs de Tickets abertos/fechados |
-| `!config logsbau [#canal]` | Canal de logs de Baús (FiveM + bot) |
 | `!config logscombate [#canal]` | Canal de logs de Combate (mortes do FiveM) |
-| `!config prefixo [símbolo]` | Muda o prefixo do bot (ex: `.`, `?`) |
-| `!config statusbot auto` | Status mostra players do FiveM |
-| `!config statusbot manual [TIPO] [texto]` | Status manual (PLAYING/WATCHING/LISTENING/COMPETING) |
-| `!config nomebot [nome]` | Muda apelido do bot no servidor |
-| `!config avatarbot [url]` | Muda o avatar global do bot |
-| `!config autorole [@cargo]` | Cargo dado automaticamente a novos membros |
 
 ---
 
@@ -52,11 +35,7 @@
 | Comando | Descrição |
 |---|---|
 | `!liberar [ID]` | Whitelist manual de um passaporte |
-| `!ban [ID] [motivo]` | Bane no BD + expulsa via RCON (`ban [ID]`) |
-| `!unban [ID]` | Remove o banimento da tabela `vrp_bans` |
-| `!kick [ID] [motivo]` | Registra kick no BD + desconecta via RCON (`clientkick [ID]`) |
-| `!warn [ID] [motivo]` | Registra advertência (conta o total) |
-| `!dvall` | Limpa todos os veículos vazios no FiveM |
+| `!wlsetup` | Reenvia a embed de instrução no canal de whitelist |
 
 ---
 
@@ -96,12 +75,8 @@
 |---|---|
 | `!ajuda` | Lista todos os comandos por categoria |
 | `!ip` | Mostra o IP e players online do servidor |
-| `!ping` | Mostra latência do bot e da API |
 | `!serverinfo` | Informações completas do servidor |
-| `!servericon` | Exibe o ícone do servidor |
-| `!serverbanner` | Exibe o banner do servidor (Boost 2+) |
 | `!userinfo [@user]` | Informações de um membro |
-| `!sugerir [texto]` | Envia sugestão com votação 👍/👎 |
 
 ---
 

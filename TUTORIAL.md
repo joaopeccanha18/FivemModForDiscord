@@ -25,18 +25,15 @@ DB_PASS=sua_senha
 DB_NAME=vrp
 ```
 
-### 2. Criar tabelas extras no BD (uma única vez)
-```sql
-CREATE TABLE IF NOT EXISTS vrp_bans  (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, reason VARCHAR(500), banned_by VARCHAR(100), banned_at DATETIME DEFAULT NOW());
-CREATE TABLE IF NOT EXISTS vrp_kicks (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, reason VARCHAR(500), kicked_by VARCHAR(100), kicked_at DATETIME DEFAULT NOW());
-CREATE TABLE IF NOT EXISTS vrp_warns (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, reason VARCHAR(500), warned_by VARCHAR(100), warned_at DATETIME DEFAULT NOW());
-```
-
-### 3. Iniciar
+### 2. Iniciar
 ```bash
 cd bot-cidade
 node index.js
+# ou com nodemon para desenvolvimento:
+npm run dev
 ```
+
+
 
 ---
 
@@ -47,34 +44,27 @@ Após ligar o bot, use os comandos abaixo no Discord:
 ### Configuração essencial
 ```
 !config setip 45.123.45.6:30120   → IP do FiveM
-!config setstaff @Staff            → Cargo que pode usar !ban, !kick, etc.
-!config setticketrole @Suporte     → Cargo que pode ver os tickets abertos
-!config autorole @Cidadão          → Cargo dado a novos membros
+!config setstaff @Staff            → Cargo de Staff
+!config setticketrole @Suporte     → Cargo de Atendimento (Tickets)
+!config whitelist #whitelist       → Canal de whitelist
+!wlsetup                           → Envia a embed de instrução no canal
 !config ver                        → Confirma tudo
 ```
 
 ### Configurar canais
 ```
 !config whitelist #whitelist       → Canal de Auto-Whitelist (entrada de IDs)
-!config entrada #boas-vindas       → Mensagens de entrada de membros
-!config saida #saidas              → Mensagens de saída
-!config sugerir #sugestoes         → Canal de sugestões
 !config status #status-cidade      → Embed de status da cidade (atualiza a cada 60s)
+!config ticket #tickets            → Canal de tickets
 !config categoria 1234567890       → Categoria onde os tickets são abertos
 
 # ───── Canais de Logs por Funcionalidade ─────
-!config logs #logs-mod             → Moderação geral (ban / kick / unban)
 !config logswl #logs-wl            → Logs de Whitelist aprovada
 !config logsticket #logs-tickets   → Logs de Tickets abertos/fechados
-!config logsbau #logs-baus         → Logs de Baús (FiveM + bot)
 !config logscombate #logs-combate  → Logs de Combate do FiveM
 ```
 
-### Configurar status
-```
-!config statusbot auto                           → Players FiveM (padrão)
-!config statusbot manual PLAYING Roleplay City   → Texto fixo
-```
+
 
 ---
 
@@ -115,6 +105,5 @@ TriggerServerEvent('discord-logs:bau', "Detalhe do que aconteceu")
 | Problema | Solução |
 |---|---|
 | Bot não lê mensagens | Ative as 3 Privileged Intents no Developer Portal |
-| Prefixo mudou e não funciona | Use o novo prefixo, ou edite `config.json` e reinicie |
-| `!dvall` não funciona | Verifique o IP com `!config ver` e se `discord-logs` está ativo |
-| `!ban` falha | Execute os SQLs da Parte 1 no seu banco de dados |
+| Auto-WL não funciona | Verifique se o canal está configurado com `!config whitelist #canal` |
+| Logs não aparecem | Confirme o canal com `!config ver` e verifique permissões do bot |

@@ -5,14 +5,8 @@
  * Mapeamento de tipos para chaves do config.json:
  *   WL      → canais.logs_wl      (logs de whitelist aprovada)
  *   TICKET  → canais.logs_tickets (logs de tickets abertos/fechados)
- *   BAU     → canais.logs_bau     (logs de baús — também usado pelo resource FiveM)
  *   COMBATE → canais.logs_combate (logs de combate — também usado pelo resource FiveM)
- *   BAN     → canais.logs         (ações de moderação gerais)
- *   KICK    → canais.logs
- *   UNBAN   → canais.logs
- *   WARN    → canais.logs
- *   CONFIG  → canais.logs
- *   DISCORD → canais.logs
+ *   BAN/KICK/UNBAN/WARN/CONFIG/DISCORD → canais.logs (moderação geral)
  *
  * Uso: const { sendLog } = require('../utils/logger');
  *      await sendLog(client, { type, title, fields, footer });
@@ -21,23 +15,21 @@ const { EmbedBuilder } = require('discord.js');
 const { getConfig } = require('./configManager');
 
 const CORES = {
-    WL: '#00FF7F', // Verde
-    TICKET: '#9B59B6', // Roxo
-    BAU: '#E67E22', // Laranja escuro
-    COMBATE: '#E74C3C', // Vermelho sangue
-    BAN: '#FF0000', // Vermelho
-    KICK: '#FFA500', // Laranja
-    UNBAN: '#00BFFF', // Azul claro
-    WARN: '#FFD700', // Amarelo
-    CONFIG: '#5865F2', // Azul Discord
-    DISCORD: '#EB459E', // Rosa
+    WL: '#00FF7F',
+    TICKET: '#9B59B6',
+    COMBATE: '#E74C3C',
+    BAN: '#FF0000',
+    KICK: '#FFA500',
+    UNBAN: '#00BFFF',
+    WARN: '#FFD700',
+    CONFIG: '#5865F2',
+    DISCORD: '#EB459E',
 };
 
 // Qual chave do config.json cada tipo usa como destino
 const CANAL_KEY = {
     WL: 'logs_wl',
     TICKET: 'logs_tickets',
-    BAU: 'logs_bau',
     COMBATE: 'logs_combate',
     BAN: 'logs',
     KICK: 'logs',

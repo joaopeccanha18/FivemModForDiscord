@@ -27,7 +27,6 @@ module.exports = {
                         `\`${p}config logs [#canal]\` — Logs de moderação`,
                         `\`${p}config logswl [#canal]\` — Logs de Whitelist`,
                         `\`${p}config logsticket [#canal]\` — Logs de Tickets`,
-                        `\`${p}config logsbau [#canal]\` — Logs de Baús`,
                         `\`${p}config logscombate [#canal]\` — Logs de Combate`,
                         `\`${p}config ticket [#canal]\` — Canal de Tickets`,
                         `\`${p}config categoria [ID]\` — Categoria de Tickets`,
@@ -37,10 +36,7 @@ module.exports = {
                     name: '🛠️ Moderação FiveM (Staff)',
                     value: [
                         `\`${p}liberar [ID]\` — Aprovar whitelist manualmente`,
-                        `\`${p}ban [ID] [motivo]\` — Banir no BD + RCON`,
-                        `\`${p}unban [ID]\` — Remover banimento`,
-                        `\`${p}kick [ID] [motivo]\` — Kick no BD + RCON`,
-                        `\`${p}warn [ID] [motivo]\` — Advertência no BD`,
+                        `\`${p}wlsetup\` — Reenviar embed de instrução no canal de WL`,
                     ].join('\n')
                 },
                 {

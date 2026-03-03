@@ -9,23 +9,21 @@
   "canais": {
     "whitelist": "1463937236482523213",
     "logs_combate": "1478410433261211689",
-    "logs_admin": "",
-    "logs_bau": "",
     "logs_wl": "1478410248028164298",
     "logs_tickets": "1478410378617553069",
     "sugestoes": "",
     "entrada": "",
     "saida": "",
-    "estatisticas": "",
     "tickets": "1463937237191491608",
     "ticket_categoria": "1463937237191491607",
     "canal_status": "",
     "status_message_id": "1478388785359093902",
     "status": "1464640548986949748",
-    "logs": "1478410307205464184"
+    "logs": "1478410307205464184",
+    "wl_message_id": "1478521689917751326"
   },
   "cargo_ticket": "1463937235975147580",
-  "cargo_staff": "",
+  "cargo_staff": "1463937235975147580",
   "mensagem_entrada": "Bem-vindo(a) ao servidor, {user}! 🎉",
   "mensagem_saida": "{user} saiu do servidor. 👋"
 }

@@ -15,17 +15,12 @@ const { getConfig, saveConfig } = require('../../utils/configManager');
 
 const CANAL_MAP = {
     whitelist: 'whitelist',
-    estatistica: 'estatisticas',
-    combate: 'logs_combate',
-    admin: 'logs_admin',
-    bau: 'logs_bau',
     ticket: 'tickets',
     categoria: 'ticket_categoria',
     status: 'status',
     logs: 'logs',
     logswl: 'logs_wl',
     logsticket: 'logs_tickets',
-    logsbau: 'logs_bau',
     logscombate: 'logs_combate'
 };
 
@@ -49,11 +44,8 @@ module.exports = {
                     { name: '👮 Cargo Staff', value: cfg.cargo_staff ? `<@&${cfg.cargo_staff}>` : '`não definido`', inline: true },
                     { name: '🎫 Cargo Ticket', value: cfg.cargo_ticket ? `<@&${cfg.cargo_ticket}>` : '`não definido`', inline: true },
                     { name: '🔑 Canal WL', value: ch.whitelist ? `<#${ch.whitelist}>` : '`não definido`', inline: true },
-                    { name: '📊 Canal Estatísticas', value: ch.estatisticas ? `<#${ch.estatisticas}>` : '`não definido`', inline: true },
                     { name: '📺 Canal Status', value: ch.status ? `<#${ch.status}>` : '`não definido`', inline: true },
                     { name: '⚔️ Logs Combate', value: ch.logs_combate ? `<#${ch.logs_combate}>` : '`não definido`', inline: true },
-                    { name: '🛡️ Logs Admin', value: ch.logs_admin ? `<#${ch.logs_admin}>` : '`não definido`', inline: true },
-                    { name: '🗃️ Logs Baús', value: ch.logs_bau ? `<#${ch.logs_bau}>` : '`não definido`', inline: true },
                     { name: '✅ Logs WL', value: ch.logs_wl ? `<#${ch.logs_wl}>` : '`não definido`', inline: true },
                     { name: '🎫 Logs Tickets', value: ch.logs_tickets ? `<#${ch.logs_tickets}>` : '`não definido`', inline: true },
                     { name: '🛡️ Logs Moderação', value: ch.logs ? `<#${ch.logs}>` : '`não definido`', inline: true },

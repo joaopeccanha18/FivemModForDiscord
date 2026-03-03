@@ -36,9 +36,9 @@ local function enviarWebhook(webhook, titulo, descricao, cor)
 end
 
 -- Obtém Discord mention e License de um jogador
-local function getIds(source)
+local function getIds(src)
     local ids = { discord = "N/A", license = "N/A", ip = "N/A" }
-    for _, v in ipairs(GetPlayerIdentifiers(source)) do
+    for _, v in ipairs(GetPlayerIdentifiers(src)) do
         if v:find("discord:")  then ids.discord = "<@"  .. v:gsub("discord:", "")  .. ">" end
         if v:find("license:")  then ids.license = "`"   .. v:gsub("license:", "")   .. "`" end
         if v:find("ip:")       then ids.ip       = "`"  .. v:gsub("ip:", "")        .. "`" end
@@ -47,13 +47,16 @@ local function getIds(source)
 end
 
 -- ============================================================
--- EVENTO: Jogador Conectando
+-- MAPA: passport (vrp_id) → netId do servidor
+-- Usado pelos endpoints /kick e /ban para encontrar o jogador ativo
 -- ============================================================
+local passportMap = {} -- { [vrp_id_string] = netId }
+
+-- Webhook de entrada
 AddEventHandler('playerJoining', function()
     local src  = source
     local nome = GetPlayerName(src) or "Desconhecido"
     local ids  = getIds(src)
-
     enviarWebhook(Config.Webhooks.JoinLeave,
         "✅ Jogador Conectou à Cidade",
         ("**Jogador:** %s\n**Discord:** %s\n**Licença:** %s"):format(nome, ids.discord, ids.license),
@@ -61,13 +64,24 @@ AddEventHandler('playerJoining', function()
     )
 end)
 
--- ============================================================
--- EVENTO: Jogador Desconectou
--- ============================================================
+-- Registra passport ID → netId quando o personagem spawna (evento vRP padrão)
+AddEventHandler('vrp:playerSpawned', function(user_id, src, first_spawn)
+    if user_id and src then
+        passportMap[tostring(user_id)] = src
+        print(("[discord-logs] 🗂️  Passaporte %s → netId %s registrado"):format(tostring(user_id), tostring(src)))
+    end
+end)
+
+-- Webhook de saída + limpa mapa
 AddEventHandler('playerDropped', function(motivo)
     local src  = source
     local nome = GetPlayerName(src) or "Desconhecido"
     local ids  = getIds(src)
+
+    -- Remove do passportMap
+    for pid, netId in pairs(passportMap) do
+        if netId == src then passportMap[pid] = nil; break end
+    end
 
     enviarWebhook(Config.Webhooks.JoinLeave,
         "❌ Jogador Desconectou",
@@ -79,7 +93,7 @@ end)
 -- ============================================================
 -- COMBATE: mortes PvP detalhadas (requer baseevents no server.cfg)
 -- ============================================================
-local morteRegistrada = {} -- cache anti-duplicata (netId → timestamp)
+local morteRegistrada = {}
 
 AddEventHandler('baseevents:onPlayerKilled', function(killerData, deathData)
     local src      = source
@@ -94,7 +108,6 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerData, deathData)
         killer = GetPlayerName(killerData.killerNetId) or ("Jogador #" .. tostring(killerData.killerNetId))
     end
 
-    -- Marca como registrado para evitar duplicata com o fallback abaixo
     morteRegistrada[src] = os.time()
 
     local desc = ("**Morto:** %s\n**Matador:** %s\n**Arma:** `%s`\n**Distância:** `%d metros`\n**Headshot:** %s"):format(
@@ -103,13 +116,9 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerData, deathData)
     enviarWebhook(Config.Webhooks.Combate, "💀 Morte em Combate", desc, cor)
 end)
 
--- ============================================================
--- COMBATE: fallback para QUALQUER tipo de morte não coberta acima
--- (quedas, afogamento, NPCs, explosões, /kill, etc.)
--- ============================================================
+-- Fallback: qualquer morte não coberta acima (queda, afogamento, NPC, explosão…)
 AddEventHandler('baseevents:onPlayerDied', function(killerData, deathData)
     local src  = source
-    -- Se já foi registrada pelo handler acima há menos de 3 segundos, ignora
     if morteRegistrada[src] and (os.time() - morteRegistrada[src]) < 3 then return end
 
     local morto = GetPlayerName(src) or "Desconhecido"
@@ -130,14 +139,12 @@ end)
 
 -- ============================================================
 -- EVENTO CUSTOMIZADO: Log de Admin Heal
--- Dispare do seu script de admin:
---   TriggerServerEvent('discord-logs:adminHeal', nomeAdmin, sourceAlvo)
+-- TriggerServerEvent('discord-logs:adminHeal', nomeAdmin, sourceAlvo)
 -- ============================================================
 RegisterNetEvent('discord-logs:adminHeal', function(nomeAdmin, alvoId)
-    local src   = source
-    local ids   = getIds(src)
-    local alvo  = GetPlayerName(alvoId) or ("ID " .. tostring(alvoId))
-
+    local src  = source
+    local ids  = getIds(src)
+    local alvo = GetPlayerName(alvoId) or ("ID " .. tostring(alvoId))
     enviarWebhook(Config.Webhooks.AdminHeal,
         "💊 Admin: Heal Utilizado",
         ("**Admin:** %s (%s)\n**Curou:** %s"):format(nomeAdmin, ids.discord, alvo),
@@ -147,13 +154,12 @@ end)
 
 -- ============================================================
 -- EVENTO CUSTOMIZADO: Log de Admin God Mode
--- Dispare: TriggerServerEvent('discord-logs:adminGod', nomeAdmin, true/false)
+-- TriggerServerEvent('discord-logs:adminGod', nomeAdmin, true/false)
 -- ============================================================
 RegisterNetEvent('discord-logs:adminGod', function(nomeAdmin, ativo)
-    local src   = source
-    local ids   = getIds(src)
+    local src    = source
+    local ids    = getIds(src)
     local status = ativo and "✅ **Ativou** o God Mode" or "❌ **Desativou** o God Mode"
-
     enviarWebhook(Config.Webhooks.AdminGod,
         "🛡️ Admin: God Mode",
         ("**Admin:** %s (%s)\n**Ação:** %s"):format(nomeAdmin, ids.discord, status),
@@ -163,14 +169,12 @@ end)
 
 -- ============================================================
 -- EVENTO CUSTOMIZADO: Log de Baú / Porta-malas
--- Dispare do seu script de baús:
---   TriggerServerEvent('discord-logs:bau', "Abriu porta-malas do veículo X com item Y")
+-- TriggerServerEvent('discord-logs:bau', "detalhe")
 -- ============================================================
 RegisterNetEvent('discord-logs:bau', function(detalhes)
     local src  = source
     local nome = GetPlayerName(src) or "Desconhecido"
     local ids  = getIds(src)
-
     enviarWebhook(Config.Webhooks.Baus,
         "🗃️ Atividade em Baú/Porta-malas",
         ("**Jogador:** %s\n**Discord:** %s\n**Detalhe:** %s"):format(nome, ids.discord, tostring(detalhes)),
@@ -179,23 +183,59 @@ RegisterNetEvent('discord-logs:bau', function(detalhes)
 end)
 
 -- ============================================================
--- ENDPOINT HTTP: POST /dvall
--- Chamado pelo Bot Discord via comando !dvall
--- Deleta todos os veículos sem motorista do mapa
+-- ENDPOINTS HTTP — chamados pelo Bot Discord
+--   POST /kick  { passport, reason }  → DropPlayer em tempo real
+--   POST /ban   { passport, reason }  → DropPlayer se online
+--   POST /dvall                        → Deletar veículos vazios
 -- ============================================================
 SetHttpHandler(function(req, res)
-    if req.path == '/dvall' and req.method == 'POST' then
-        local deletados = 0
 
+    -- ── /kick ──────────────────────────────────────────────────────
+    if req.path == '/kick' and req.method == 'POST' then
+        local body     = json.decode(req.body or '{}') or {}
+        local passport = tostring(body.passport or '')
+        local reason   = tostring(body.reason or 'Sem motivo.')
+
+        local netId = passportMap[passport]
+        if not netId then
+            res.writeHead(404, { ['Content-Type'] = 'application/json' })
+            res.send(json.encode({ success = false, error = 'Jogador nao encontrado online.' }))
+            return
+        end
+
+        DropPlayer(netId, '[Staff] ' .. reason)
+        print(('[discord-logs] 👟 /kick: Passaporte %s (netId %s) — %s'):format(passport, tostring(netId), reason))
+        res.writeHead(200, { ['Content-Type'] = 'application/json' })
+        res.send(json.encode({ success = true, passport = passport }))
+
+    -- ── /ban ───────────────────────────────────────────────────────
+    elseif req.path == '/ban' and req.method == 'POST' then
+        local body     = json.decode(req.body or '{}') or {}
+        local passport = tostring(body.passport or '')
+        local reason   = tostring(body.reason or 'Banido.')
+
+        local netId = passportMap[passport]
+        local online = netId ~= nil
+        if online then
+            DropPlayer(netId, '[BAN] ' .. reason)
+            print(('[discord-logs] 🔨 /ban: Passaporte %s (netId %s) expulso.'):format(passport, tostring(netId)))
+        else
+            print(('[discord-logs] 🔨 /ban: Passaporte %s offline — ban só no BD.'):format(passport))
+        end
+
+        res.writeHead(200, { ['Content-Type'] = 'application/json' })
+        res.send(json.encode({ success = true, online = online, passport = passport }))
+
+    -- ── /dvall ─────────────────────────────────────────────────────
+    elseif req.path == '/dvall' and req.method == 'POST' then
+        local deletados = 0
         for _, veh in ipairs(GetAllVehicles()) do
-            -- Deleta apenas veículos sem driver (seat -1 = assento do motorista)
             if GetPedInVehicleSeat(veh, -1) == 0 then
                 DeleteEntity(veh)
                 deletados = deletados + 1
             end
         end
-
-        print(("[discord-logs] 🚗 /dvall: %d veículos vazios deletados."):format(deletados))
+        print(('[discord-logs] 🚗 /dvall: %d veículos deletados.'):format(deletados))
         res.writeHead(200, { ['Content-Type'] = 'application/json' })
         res.send(json.encode({ success = true, deletados = deletados }))
 

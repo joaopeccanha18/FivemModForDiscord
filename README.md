@@ -20,10 +20,8 @@
 - Configurações: IP do servidor FiveM, prefixo, IDs de canais, autorole, modo de status e muito mais
 
 ### 🎭 Eventos Automáticos
-- **Autorole** — Atribui automaticamente um cargo a novos membros
-- **Mensagem de boas-vindas** — Envia uma embed rica quando alguém entra (personalizável com `{user}`, `{servidor}`, `{membros}`)
-- **Mensagem de saída** — Envia uma embed quando alguém sai
 - **Status Automático** — Atualiza o status "Jogando" do bot a cada 60s com a contagem de players ao vivo
+- **Embed de Status Fixo** — Mantém uma embed atualizada num canal configurado com status do servidor
 
 ### 🎫 Sistema de Tickets
 - `!setup` cria um painel de suporte profissional com botões interativos
@@ -33,11 +31,7 @@
 
 ### 🛠️ Moderação FiveM (Staff)
 - `!liberar [ID]` — Aprovação manual de whitelist
-- `!ban [ID] [motivo]` — Registra ban no DB **+ expulsa via RCON** (`ban [ID]`)
-- `!unban [ID]` — Remove o banimento da tabela `vrp_bans`
-- `!kick [ID] [motivo]` — Registra kick no DB **+ desconecta via RCON** (`clientkick [ID]`)
-- `!warn [ID] [motivo]` — Registra advertência com contador acumulado
-- `!dvall` — Envia requisição HTTP ao servidor FiveM para deletar todos os veículos vazios
+- `!wlsetup` — Reenvia a embed de instrução fixada no canal de whitelist
 
 ### 🔧 Moderação Discord (Staff)
 - `!clear [N]` — Apaga até 100 mensagens em massa
@@ -49,11 +43,11 @@
 - `!dkick [@user] [motivo]` — Expulsa um membro do Discord
 - `!setnick [@user] [apelido]` — Altera o apelido de um membro
 
-### 📝 Canal de Logs Centralizado
-- Todas as ações do bot são registradas em embeds coloridas num canal exclusivo
-- Configure com `!config logs #canal`
-- Eventos registrados: **Whitelist**, **Kick**, **Ban**, **Unban**, **Ticket aberto**, **Ticket fechado**
-- Cada embed mostra: tipo do evento, quem executou, ID do passaporte e resultado do RCON
+### 📝 Canais de Logs por Funcionalidade
+- Configure um canal separado para cada tipo de evento com `!config logs*`
+- **Logs de WL** (`!config logswl`) — Whitelists aprovadas
+- **Logs de Tickets** (`!config logsticket`) — Abertura e fechamento
+- **Logs de Combate** (`!config logscombate`) — Mortes do FiveM via webhook
 
 ### 📣 Ferramentas de Staff
 - `!anunciar [#canal] [mensagem]` — Envia uma embed de anúncio com @everyone
@@ -64,12 +58,8 @@
 ### 📊 Utilitários e Informações (Público)
 - `!ajuda` — Lista completa de comandos por categoria
 - `!ip` — Mostra o IP do servidor FiveM e a contagem de players ao vivo
-- `!ping` — Latência do bot e da API
-- `!serverinfo` — Estatísticas completas do servidor (membros, cargos, canais, boosts...)
-- `!servericon` — Exibe o ícone do servidor
-- `!serverbanner` — Exibe o banner do servidor (Nível de Boost 2+)
-- `!userinfo [@user]` — Info de um membro (cargos, data de entrada, idade da conta...)
-- `!sugerir [texto]` — Envia uma sugestão com reações de votação 👍/👎
+- `!serverinfo` — Estatísticas completas do servidor
+- `!userinfo [@user]` — Info de um membro
 
 ### 📨 Logs do FiveM → Discord (resource `discord-logs`)
 Logs avançados enviados via webhook diretamente para canais do Discord:
