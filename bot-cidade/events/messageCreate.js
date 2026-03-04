@@ -7,6 +7,8 @@ const { Events } = require('discord.js');
 const { getConfig } = require('../utils/configManager');
 const { sendLog } = require('../utils/logger');
 
+const WL_ROLE_ID = '1463937235907903717';
+
 module.exports = {
     name: Events.MessageCreate,
     async execute(message, client) {
@@ -23,8 +25,16 @@ module.exports = {
                 // 1. Deleta a mensagem original imediatamente
                 await message.delete().catch(() => { });
 
+                // 2. Faz fetch do membro para garantir dados actualizados
+                let membro;
                 try {
-                    // 2. Verifica se o ID existe e busca o nome em única query (JOIN)
+                    membro = await message.guild.members.fetch(message.author.id);
+                } catch {
+                    membro = message.member;
+                }
+
+                try {
+                    // 3. Verifica se o ID existe e busca o nome em única query (JOIN)
                     const [rows] = await client.db.execute(`
                         SELECT u.id, i.nome, i.sobrenome
                         FROM vrp_users u
@@ -39,19 +49,18 @@ module.exports = {
                         return;
                     }
 
-                    // 3. Atualiza a whitelist
+                    // 4. Atualiza a whitelist
                     await client.db.execute('UPDATE vrp_users SET whitelist = 1 WHERE id = ?', [id]);
 
-                    // 3.5 Adiciona o cargo de WL ao membro no Discord
-                    const WL_ROLE_ID = '1463937235907903717';
+                    // 5. Adiciona o cargo de WL
                     try {
-                        await message.member.roles.add(WL_ROLE_ID);
+                        await membro.roles.add(WL_ROLE_ID);
                         console.log(`[AUTO-WL] ✅ Cargo de WL adicionado para ${message.author.tag}`);
                     } catch (roleErr) {
                         console.warn(`[AUTO-WL] ⚠️  Não foi possível adicionar cargo WL: ${roleErr.message}`);
                     }
 
-                    // 4. Monta o apelido — usa nome do personagem se tiver, ou nome do Discord
+                    // 6. Monta o apelido — usa nome do personagem se tiver, ou nome do Discord
                     let nickName = message.author.username;
                     if (rows[0].nome) {
                         nickName = `${rows[0].nome} ${rows[0].sobrenome || ''}`.trim();
@@ -59,22 +68,27 @@ module.exports = {
                         console.warn(`[AUTO-WL] ID ${id} ainda sem personagem em vrp_user_identities — usando nome do Discord.`);
                     }
 
-                    // 5. Aplica apelido no Discord: "Nome | ID" (máx 32 chars)
+                    // 7. Aplica apelido no Discord: "Nome | ID" (máx 32 chars)
                     const novoApelido = `${nickName} | ${id}`.substring(0, 32);
                     try {
-                        await message.member.setNickname(novoApelido);
+                        await membro.setNickname(novoApelido, 'Auto-WL');
                         console.log(`[AUTO-WL] ✅ ID ${id} | Apelido: "${novoApelido}" | Discord: ${message.author.tag}`);
                     } catch (nickErr) {
-                        console.warn(`[AUTO-WL] ⚠️  Não foi possível definir apelido: ${nickErr.message}`);
+                        console.error(`[AUTO-WL] ❌ Falha ao definir apelido: ${nickErr.message}`);
+                        // Mostra o erro no canal temporariamente para diagnóstico
+                        const errMsg = await message.channel.send(
+                            `⚠️ Whitelist aprovada, mas não foi possível alterar o apelido: \`${nickErr.message}\``
+                        );
+                        setTimeout(() => errMsg.delete().catch(() => { }), 8_000);
                     }
 
-                    // 6. Confirmação temporária (auto-apaga em 5s)
+                    // 8. Confirmação temporária (auto-apaga em 5s)
                     const msg = await message.channel.send(
                         `✅ **Whitelist Aprovada!** Passaporte \`${id}\` liberado.\nBem-vindo(a) à cidade, ${message.author}! 🏙️`
                     );
                     setTimeout(() => msg.delete().catch(() => { }), 5_000);
 
-                    // 7. Log no canal de logs de WL
+                    // 9. Log no canal de logs de WL
                     await sendLog(client, {
                         type: 'WL',
                         title: '✅ Whitelist Aprovada (Auto)',
