@@ -5,6 +5,23 @@
 
 ---
 
+## 🖥️ Launcher GUI (Novo!)
+
+Inicia o bot **sem abrir nenhum terminal** — clica duas vezes e pronto:
+
+```
+launcher/Iniciar Bot.bat
+```
+
+- Interface gráfica escura com botões **▶ Iniciar** / **⏹ Parar**
+- Painel de logs em tempo real com cores para erros/avisos
+- Indicador de estado Online / Offline
+- Na primeira execução instala as dependências automaticamente
+
+> **💡 Dica:** Clica com o botão direito em `Iniciar Bot.bat` → Enviar para → Ambiente de Trabalho (criar atalho)
+
+---
+
 ## ✨ Funcionalidades
 
 ### 🤖 Auto-Whitelist
@@ -79,6 +96,12 @@ FivemModForDiscord/
 │       ├── config/          ← !config, !wlsetup
 │       ├── moderation/      ← !clear, !lock, !dban, !timeout...
 │       └── discord/         ← !ajuda, !ip, !serverinfo...
+├── launcher/                ← 🖥️ Launcher GUI (Electron)
+│   ├── main.js              ← Processo principal
+│   ├── preload.js           ← Bridge segura IPC
+│   ├── index.html           ← Interface gráfica
+│   ├── package.json
+│   └── Iniciar Bot.bat      ← ⭐ DUPLO CLIQUE PARA ABRIR
 ├── discord-logs/            ← Resource Lua para FiveM
 │   ├── fxmanifest.lua
 │   ├── config.lua           ← URLs dos Webhooks
@@ -103,6 +126,13 @@ DB_NAME=nome_do_banco
 ```
 
 ### 2. Iniciar o bot
+
+**Opção A — Launcher GUI (recomendado, sem terminal):**
+```
+launcher/Iniciar Bot.bat   ← duplo clique
+```
+
+**Opção B — Terminal (alternativa):**
 ```bash
 cd bot-cidade
 npm install
@@ -136,7 +166,8 @@ Consulte o **[PM2_TUTORIAL.md](./PM2_TUTORIAL.md)** para manter o bot 24/7 com r
 
 | Componente | Tecnologia |
 |---|---|
-| Bot Discord | Node.js + Discord.js v14 |
+| Bot Discord | Node.js + Discord.js v13 |
+| Launcher GUI | Electron |
 | Banco de Dados | MySQL 2 |
 | HTTP | Axios |
 | Resource FiveM | Lua |

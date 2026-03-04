@@ -1,4 +1,4 @@
-# 🚀 Tutorial: Bot Cidade — Configuração Completa (v4)
+# 🚀 Tutorial: Bot Cidade — Configuração Completa (v7)
 
 > ✨ **Tudo é configurado via `!config` no Discord. Sem mexer em código ou reiniciar o bot.**
 
@@ -38,7 +38,24 @@ O script detecta o que já está instalado, valida o `.env` e inicia o bot autom
 
 ---
 
-## 🤖 PARTE 1 — Bot (`bot-cidade`)
+## 🖥️ PARTE 0 — Launcher GUI (Sem Terminal!)
+
+> **Método recomendado para Windows** — abre o bot com duplo clique, sem terminal visível.
+
+### Como usar
+1. Certifica-te que já criaste o ficheiro `bot-cidade/.env` com as tuas credenciais
+2. Vai à pasta `launcher/`
+3. **Duplo clique** em `Iniciar Bot.bat`
+   - Na primeira vez instala as dependências automaticamente (aguarda ~30s)
+   - Nas próximas vezes abre instantaneamente
+4. Na janela que abrir, clica **▶ Iniciar Bot**
+5. Os logs aparecem no painel em tempo real
+
+> 💡 **Atalho rápido:** Clica com o direito em `Iniciar Bot.bat` → Enviar para → Ambiente de Trabalho (criar atalho)
+
+---
+
+## 🤖 PARTE 1 — Bot via Terminal (alternativa)
 
 ### 1. Criar o `.env`
 Copie `.env.example` → `.env` e preencha:
@@ -53,12 +70,11 @@ DB_NAME=vrp
 ### 2. Iniciar
 ```bash
 cd bot-cidade
+npm install
 node index.js
 # ou com nodemon para desenvolvimento:
 npm run dev
 ```
-
-
 
 ---
 
@@ -120,6 +136,8 @@ ensure discord-logs
 
 | Problema | Solução |
 |---|---|
+| Launcher não abre | Confirma que o `bot-cidade/.env` existe com o TOKEN preenchido |
+| Janela fecha sozinha | Verifica os logs no painel — provavelmente erro no TOKEN ou DB |
 | Bot não lê mensagens | Ative as 3 Privileged Intents no Developer Portal |
 | Auto-WL não funciona | Verifique se o canal está configurado com `!config whitelist #canal` |
 | Logs não aparecem | Confirme o canal com `!config ver` e verifique permissões do bot |

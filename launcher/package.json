@@ -1,0 +1,15 @@
+{
+  "name": "fivem-bot-launcher",
+  "version": "1.0.0",
+  "description": "Launcher GUI para o Bot FiveM+Discord",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
