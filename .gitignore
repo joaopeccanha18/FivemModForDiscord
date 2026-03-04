@@ -1,1 +1,4 @@
 bot-cidade/.env
+node_modules/
+*/node_modules/
+launcher/node_modules/
